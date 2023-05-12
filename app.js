@@ -14,9 +14,9 @@ app.get('/', (req, res) => {
     res.status(200).json({
         msg: 'Bem vindo a api'
     })
-    console.log('Server open http://localhost3000')
-})
 
+})
+console.log('Server open http://localhost3000')
 app.listen(3000)
 
 
