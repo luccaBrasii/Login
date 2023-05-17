@@ -1,4 +1,4 @@
-const database = require('../models/usuario')
+const database = require('../models')
 
 class Usuarios {
     static async buscaUsuario(req, res) {

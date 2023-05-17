@@ -1,8 +1,5 @@
 require('dotenv').config()
-
 const express = require('express')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const routes = require('./api/routes')
 
 const app = express()
@@ -16,8 +13,9 @@ app.get('/', (req, res) => {
     })
 
 })
-console.log('Server open http://localhost3000')
 app.listen(3000)
+console.log('Server open http://localhost:3000')
+
 
 
 
