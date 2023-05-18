@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const database = require('../models')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const path = require('path');
 
 
 
@@ -57,7 +58,7 @@ module.exports = app => {
         await database.Usuario.create({
             nome: name,
             senha: passwordHash,
-            confirmar_senha: confirmaSenha,
+            confirmar_senha: passwordHash,
             createdAt: new Date(),
             updatedAt: new Date()
         })
@@ -119,8 +120,11 @@ module.exports = app => {
             }, secret)
 
             res.status(200).json({
-                msg: `LOGIN OK, TOKEN: ${token}`
+                id: `${user.id}`,
+                token: `${token}`
             })
+            console.log(`Autenticado. ${token}`)
+
 
         } catch (err) {
             console.log(err);
@@ -142,19 +146,15 @@ module.exports = app => {
             attributes: { exclude: ['senha', 'confirmar_senha'] }
         })
 
-        //validacoes
+        const filePath = path.join(__dirname, '../../public/privateRoute.html');
+        res.status(200).sendFile(filePath);
 
-
-        res.status(200).json({
-            user
-        })
     })
 }
 
 function checkToken(req, res, next) {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-
 
     if (!token) return res.status(401).json({ msg: "Acesso negado!" });
 

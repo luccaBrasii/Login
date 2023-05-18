@@ -5,12 +5,12 @@ const routes = require('./api/routes')
 const app = express()
 
 routes(app)
+
 app.use(express.json())
+app.use(express.static('public'))
 
 app.get('/', (req, res) => {
-    res.status(200).json({
-        msg: 'Bem vindo a api'
-    })
+    res.status(200).sendFile(__dirname + '/public');
 
 })
 app.listen(3000)
