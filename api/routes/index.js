@@ -2,10 +2,6 @@ require('dotenv').config();
 const bodyParser = require('body-parser')
 const database = require('../models')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const path = require('path');
-
-
 
 module.exports = app => {
     app.use(bodyParser.json())
@@ -113,17 +109,12 @@ module.exports = app => {
         }
 
         try {
-            const secret = process.env.SECRET
-
-            const token = jwt.sign({
-                id: user._id
-            }, secret)
 
             res.status(200).json({
-                id: `${user.id}`,
-                token: `${token}`
+                id: user.id,
+                name: user.nome
             })
-            console.log(`Autenticado. ${token}`)
+
 
 
         } catch (err) {
@@ -136,35 +127,6 @@ module.exports = app => {
 
     })
 
-    //ROTA PRIVADA
-    app.get('/user/:id', checkToken, async (req, res) => {
-        const id = req.params.id
 
-        //ver se o usuario existe
-        const user = await database.Usuario.findOne({
-            where: { id: id },
-            attributes: { exclude: ['senha', 'confirmar_senha'] }
-        })
-
-        const filePath = path.join(__dirname, '../../public/privateRoute.html');
-        res.status(200).sendFile(filePath);
-
-    })
 }
 
-function checkToken(req, res, next) {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) return res.status(401).json({ msg: "Acesso negado!" });
-
-    try {
-        const secret = process.env.SECRET;
-
-        jwt.verify(token, secret);
-
-        next();
-    } catch (err) {
-        res.status(400).json({ msg: "O Token é inválido!" });
-    }
-}
